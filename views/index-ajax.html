@@ -27,7 +27,7 @@
 										console.log(q);
 										$.get(
 												{													
-													url: 'http://127.0.0.1:44444/ajax',
+													url: window.location.href+'ajax',
 													data : { search : q, page : p },
 													fail: function( jqXHR, textStatus ) {
 																		console.log( "Request failed: " + textStatus );
