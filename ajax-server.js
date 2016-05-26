@@ -61,7 +61,7 @@ app.get('/ajax', function(req, res){
 	var url_parts = url.parse(req.url, true);
 	var query = url_parts.query;
 	//console.log(query); 
-	var request = query.search.toUpperCase();	
+	var request = query.search;//.toUpperCase();	
 	var p = query.page;
 	var offset = (p-1) * 10;
 	var db_req = "SELECT * FROM data WHERE UPPER(caption) LIKE '%"+request+"%' ORDER BY caption LIMIT 10 OFFSET "+String(offset);

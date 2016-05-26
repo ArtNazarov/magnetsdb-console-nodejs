@@ -34,16 +34,18 @@
 													fail: function( jqXHR, textStatus ) {
 																		console.log( "Request failed: " + textStatus );
 																		},
+													
 													success: function(data) {                            																
 															 //console.log(data);
 															 var results = JSON.parse(data);
 															 //console.log(results);
 															 var markup = "";
 															 results.forEach(function(item, i, arr) {
-																	//console.log(item);
+																	console.log(item);
 																	
-																	markup = markup + "<br/><a href='magnet:?xt=urn:btih:"+
-																	item.hash+'">'+item.category+' &rarr; '+item.caption+'</a><br/>';									
+																	markup = markup + item.category+' / '+item.caption+' / '+item.labels+ " <a href='magnet:?xt=urn:btih:"+
+																	item.hash+'">magnet</a><br>';		
+																	
 																	
 															});
 															
