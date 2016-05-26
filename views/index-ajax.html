@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<title>jsonp test</title>
+    </head>
+    <body>
+				<div id="search">
+							<input type='text' name='q' id='q' value='Delta Force'>
+							<span id="search">Search</span>
+        </div>
+        <div id='results'>				
+        </div>
+        <div id='controls'>
+						<input type='button' id='reset' name='reset' value='Reset'>
+						<input type='button' id='loadmore' name='loadmore' value='Load more'>
+        </div>
+        
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		 
+    <script type="text/javascript">
+						var p = 1;
+            $(function(){	
+            
+            
+								var searcher = function(e){									
+										var markup = "search starting...";
+										var q;										
+										q = document.getElementById('q').value;											
+										console.log(q);
+										$.get(
+												{													
+													url: 'http://127.0.0.1:44444/ajax',
+													data : { search : q, page : p },
+													fail: function( jqXHR, textStatus ) {
+																		console.log( "Request failed: " + textStatus );
+																		},
+													success: function(data) {                            																
+															 //console.log(data);
+															 var results = JSON.parse(data);
+															 //console.log(results);
+															 var markup = "";
+															 results.forEach(function(item, i, arr) {
+																	//console.log(item);
+																	
+																	markup = markup + "<br/><a href='magnet:?xt=urn:btih:"+
+																	item.hash+'">'+item.category+' &larr; '+item.caption+'</a><br/>';									
+																	
+															});
+															
+															$('#results').html(markup+$('#results').html());
+													}
+											});
+								};
+								
+								$('#reset').click(function(e)
+								{
+										$('#results').html("");
+										p = 1;
+								});
+								
+                $('#search').click( searcher );
+                
+                $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
+            });
+        </script> 
+        
+    </body>
+    
+</html>
