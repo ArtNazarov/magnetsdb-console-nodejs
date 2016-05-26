@@ -1,17 +1,18 @@
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>jsonp test</title>
     </head>
     <body>
 				<div id="search">
 							<input type='text' name='q' id='q' value='Delta Force'>
-							<span id="search">Search</span>
+							<input type="button" id="search" value="Search/Поиск">
         </div>
         <div id='results'>				
         </div>
         <div id='controls'>
-						<input type='button' id='reset' name='reset' value='Reset'>
-						<input type='button' id='loadmore' name='loadmore' value='Load more'>
+						<input type='button' id='reset' name='reset' value='Reset/Сброс'>
+						<input type='button' id='loadmore' name='loadmore' value='Load more/Загрузить еще...'>
         </div>
         
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		 
@@ -19,7 +20,8 @@
 						var p = 1;
             $(function(){	
             
-            
+								$('#loadmore').hide();
+								
 								var searcher = function(e){									
 										var markup = "search starting...";
 										var q;										
@@ -41,11 +43,12 @@
 																	//console.log(item);
 																	
 																	markup = markup + "<br/><a href='magnet:?xt=urn:btih:"+
-																	item.hash+'">'+item.category+' &larr; '+item.caption+'</a><br/>';									
+																	item.hash+'">'+item.category+' &rarr; '+item.caption+'</a><br/>';									
 																	
 															});
 															
 															$('#results').html(markup+$('#results').html());
+															$('#loadmore').show();
 													}
 											});
 								};
@@ -54,9 +57,10 @@
 								{
 										$('#results').html("");
 										p = 1;
+										$('#loadmore').hide();
 								});
 								
-                $('#search').click( searcher );
+                $('#search').click( function(e) { $('#results').html(""); p = 1; searcher(e); } );
                 
                 $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
             });
