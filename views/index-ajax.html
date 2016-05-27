@@ -5,7 +5,12 @@
     </head>
     <body>
 				<div id="search">
-							<input type='text' name='q' id='q' value='Delta Force'>
+							<label for='c'>Category</label>
+							<input type='text' name='c' id='c' value='Action'>
+							<label for='q'>Caption</label>
+							<input type='text' name='q' id='q' value=''>
+							<label for='l'>Label</label>
+							<input type='text' name='l' id='l' value=''>
 							<input type="button" id="search" value="Search/Поиск">
         </div>
         <div id='results'>				
@@ -24,13 +29,14 @@
 								
 								var searcher = function(e){									
 										var markup = "search starting...";
-										var q;										
-										q = document.getElementById('q').value;											
-										console.log(q);
+										var q, l;										
+										q = document.getElementById('q').value;
+										l = document.getElementById('l').value;	
+									  c = document.getElementById('c').value;	
 										$.get(
 												{													
 													url: window.location.href+'ajax',
-													data : { search : q, page : p },
+													data : { search : q, page : p, labels : l, category : c },
 													fail: function( jqXHR, textStatus ) {
 																		console.log( "Request failed: " + textStatus );
 																		},

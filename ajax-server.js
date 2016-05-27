@@ -61,10 +61,28 @@ app.get('/ajax', function(req, res){
 	var url_parts = url.parse(req.url, true);
 	var query = url_parts.query;
 	//console.log(query); 
-	var request = query.search;//.toUpperCase();	
+	var request = query.search.toUpperCase();	
+  var labels = query.labels.toUpperCase();
+	var category = query.category.toUpperCase();
 	var p = query.page;
 	var offset = (p-1) * 10;
-	var db_req = "SELECT * FROM data WHERE UPPER(caption) LIKE '%"+request+"%' ORDER BY caption LIMIT 10 OFFSET "+String(offset);
+	var labels_part = "";
+	var category_part = "";
+	var caption_part = " 1=1 ";
+	var ordering_part = " ORDER BY caption ";
+	if (labels != "")
+	{
+		labels_part = " AND (UPPER(labels) LIKE '%"+labels+"%' ) "
+	};
+	if (request != "")
+	{
+	caption_part = " ( UPPER(caption) LIKE '%"+request+"%' ) "
+	};	
+	if (category != "")
+	{
+		category_part = " AND (UPPER(category) LIKE '%"+category+"%' ) "
+	};
+	var db_req = "SELECT * FROM data WHERE "+ caption_part + " " + category_part + " " + labels_part + ordering_part +" LIMIT 10 OFFSET "+String(offset);
 	console.log(request);
 	console.log(offset);
 	console.log(db_req);
@@ -83,8 +101,30 @@ app.get('/ajax', function(req, res){
 										res.send(JSON.stringify(Render.rows.getRows()));
                 
                 
-            });
-  
+            });		
 });
 
-app.listen(port);
+var server = app.listen(port);
+
+var gracefulShutdown = function() {
+
+	console.log("Received kill signal, shutting down gracefully.");
+	server.close(function() {
+		console.log("Closed out remaining connections.");
+		db.close();
+		process.exit()
+	});
+	
+
+	setTimeout(function() {
+		console.error("Could not close connections in time, forcefully shutting down");
+		db.close();
+		process.exit()
+	}, 10*1000);
+}
+
+
+process.on ('SIGTERM', gracefulShutdown);
+
+
+process.on ('SIGINT', gracefulShutdown);   
