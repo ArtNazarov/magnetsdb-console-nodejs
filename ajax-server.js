@@ -37,6 +37,36 @@ function like_wrapper(str, delim, field)
 	return result;
 };
 
+function wh_constr(caption, labels, category)
+{
+		var result = "";
+		if (caption != "")
+			{
+					result = caption;
+			};
+		if (labels != "")
+		{
+			 if (result!="")
+			 {result = result + ' AND ' + labels}
+			 else
+			 {
+				 result = labels;
+			 };
+		};
+		if (category != "")
+		{
+			if (result!="")
+			{
+				result = result + ' AND ' + category;
+			}
+			else
+			{
+				result = category;
+			};
+		};
+		return result;
+}
+
 /* Response */
 var RowsCollection = function(a){this.rows = a;};
 RowsCollection.prototype.add = function(row) {this.getRows().push(row);};
@@ -118,20 +148,19 @@ app.get('/ajax', function(req, res){
 	if (request != "")
 	{
 		caption_part = like_wrapper(request, ',', 'caption');
-		if (caption_part != "") {caption_part = caption_part + " AND ";}
-		else { caption_part = " (1=1) AND";};						
+		if (caption_part == "") { caption_part = " (1=1) "; };
 	};	
 	
 	if (category != "")
 	{
-		category_part = like_wrapper(category, ',', 'category');
-	  if (category_part != "")
-		{
-				category_part = category_part + " AND ";
-		};
+		category_part = like_wrapper(category, ',', 'category');	  
 	};	
 	
-	var db_req = "SELECT * FROM data WHERE "+ caption_part + category_part + labels_part + ordering_part +" LIMIT 10 OFFSET "+String(offset);
+	
+	
+	
+	
+	var db_req = "SELECT * FROM data WHERE " + wh_constr(caption_part, labels_part, category_part) + ordering_part +" LIMIT 10 OFFSET "+String(offset);
 	console.log(request);
 	console.log(offset);
 	console.log(db_req);
