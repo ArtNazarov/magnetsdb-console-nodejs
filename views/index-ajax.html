@@ -9,12 +9,19 @@
 		
     </head>
     <body>
+				<div id='help' class='alert alert-info'>
+					<ul>
+						<li>Use + to point neсessary elements which MUST be in responce.</li>
+						<li>Use - to point unnecessary elements which MUST be excluded from responce.</li>
+						<li>Use , to split elements in request</li>
+					</ul>
+				</div>
 				<div id="pan_ctrls" class='row-fluid' >
-							<label class='col-md-2' for='c'>Category</label>
+							<label class='col-md-2' for='c'>Category/Категория</label>
 							<input class='col-md-2' type='text' name='c' id='c' value='Action'>
-							<label class='col-md-2' for='q'>Caption</label>
+							<label class='col-md-2' for='q'>Caption/Название</label>
 							<input class='col-md-2' type='text' name='q' id='q' value=''>
-							<label class='col-md-2' for='l'>Label</label>
+							<label class='col-md-2' for='l'>Labels/Метки</label>
 							<input class='col-md-2' type='text' name='l' id='l' value=''>							
         </div>
          <div id='controls' class='row-fluid'>
@@ -25,6 +32,7 @@
         
         <div id='results'>														
         </div>
+        
        
         
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		     
