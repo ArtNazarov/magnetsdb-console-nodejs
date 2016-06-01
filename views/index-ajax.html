@@ -1,45 +1,51 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>MagnetsDB - NodeJS port</title>
+		<title>MagnetsDB (NodeJS port)</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+		
     </head>
     <body>
-				<div id="search">
-							<label for='c'>Category</label>
-							<input type='text' name='c' id='c' value='Action'>
-							<label for='q'>Caption</label>
-							<input type='text' name='q' id='q' value=''>
-							<label for='l'>Label</label>
-							<input type='text' name='l' id='l' value=''>
-							<input type="button" id="search" value="Search/Поиск">
+				<div id="search" class='row-fluid' >
+							<input class='col-md-8'  type='text' name='q' id='q' value='Delta Force'>
+							<input class='col-md-4' type="button" id="search" value="Search/Поиск">
         </div>
-        <div id='results'>				
+        <div id='results'>														
         </div>
-        <div id='controls'>
-						<input type='button' id='reset' name='reset' value='Reset/Сброс'>
-						<input type='button' id='loadmore' name='loadmore' value='Load more/Загрузить еще...'>
+        <div id='controls' class='row-fluid'>
+						<input class='col-md-6' type='button' id='reset' name='reset' value='Reset/Сброс'>
+						<input class='col-md-6' type='button' id='loadmore' name='loadmore' value='Load more/Загрузить еще...'>
         </div>
-        <div id='help'>
-				To search by misc categories, labels and captions use comma delimiter.
-				For example "mp3,-jazz"
-        </div>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		 
+        
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		     
     <script type="text/javascript">
 						var p = 1;
+						var items_in_view = "";
+						var append_items = function (i)
+						{
+							items_in_view = items_in_view + i;
+						}
+						var build_table = function()
+						{
+						return '<table class="table table-hover" id="rt">' + items_in_view +"</table>";
+						}
+						
             $(function(){	
             
 								$('#loadmore').hide();
 								
 								var searcher = function(e){									
-										var markup = "search starting...";
-										var q, l;										
-										q = document.getElementById('q').value;
-										l = document.getElementById('l').value;	
-									  c = document.getElementById('c').value;	
+										var markup = "";
+										var q;										
+										q = document.getElementById('q').value;											
+										console.log(q);
 										$.get(
 												{													
 													url: window.location.href+'ajax',
-													data : { search : q, page : p, labels : l, category : c },
+													data : { search : q, page : p },
 													fail: function( jqXHR, textStatus ) {
 																		console.log( "Request failed: " + textStatus );
 																		},
@@ -49,34 +55,44 @@
 															 var results = JSON.parse(data);
 															 //console.log(results);
 															 var markup = "";
+															 var el = "";
 															 results.forEach(function(item, i, arr) {
 																	console.log(item);
 																	
-																	markup = markup + item.category+' / '+item.caption+' / '+item.labels+ ' <a href=magnet:?xt=urn:btih:'+
-																	item.hash+'>magnet</a><br>';		
-																	
-																	
+																	el = "<td>"+item.category+'</td><td>'+item.caption+'</td><td> '+item.labels+ '</td><td><a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
+																	item.hash+'>magnet</a></td>';		
+																	el = "<tr>"+el+"</tr>";
+																	markup = markup + el;																																		
 															});
-															
-															$('#results').html(markup+$('#results').html());
+															console.log('content must be inserted');
+															append_items(markup);
+															$('#results').html(build_table());
+															console.log('button must visible');
 															$('#loadmore').show();
+															
 													}
 											});
 								};
 								
 								$('#reset').click(function(e)
 								{
-										$('#results').html("");
+										$('#rt').html("");
+										items_in_view = "";
 										p = 1;
 										$('#loadmore').hide();
 								});
 								
-                $('#search').click( function(e) { $('#results').html(""); p = 1; searcher(e); } );
+                $('#search').click( function(e) { items_in_view = ""; $('#results').html(""); p = 1; searcher(e); } );
                 
                 $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
+                
+                
             });
         </script> 
-        
+			<!-- Latest compiled and minified JavaScript -->
+			<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>        
+			
     </body>
+
     
 </html>

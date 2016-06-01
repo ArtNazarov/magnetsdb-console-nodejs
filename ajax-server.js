@@ -128,12 +128,31 @@ app.get('/ajax', function(req, res){
 	
 	
 	var url_parts = url.parse(req.url, true);
-	var query = url_parts.query;
-	//console.log(query); 
-	var request = query.search.toUpperCase();	
-  var labels = query.labels.toUpperCase();
-	var category = query.category.toUpperCase();
-	var p = query.page;
+	var query = url_parts.query;	
+	var request = "";
+	if ('search' in query)
+	{
+	console.log(query.search);
+	request = query.search.toUpperCase();		
+	};
+	var labels = "";
+	if ('labels' in query) 
+	{
+	console.log(query.labels);
+  labels = query.labels.toUpperCase();
+	};	
+	var category = "";
+	if ('category' in query) 
+	{
+	console.log(query.category);
+	category = query.category.toUpperCase();
+	};
+	
+	var p = 1;
+	if ('page' in query)
+	{
+	p = parseInt(query.page);
+	};	
 	var offset = (p-1) * 10;
 	var labels_part = "";
 	var category_part = "";
