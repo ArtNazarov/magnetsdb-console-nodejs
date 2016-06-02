@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-		
+		<link rel="stylesheet" type="text/css" href="views/tabulator.css"/>
     </head>
     <body>
 				<div id='help' class='alert alert-info'>
@@ -39,6 +39,18 @@
     <script type="text/javascript">
 						var p = 1;
 						var items_in_view = "";
+						var json_data = [];
+						var merge_json = function(data)
+						{
+						  data.forEach(function(item, i, arr) {
+									item.magnet_link = magnet_a(data);
+									console.log(item.magnet_link);
+						  });								
+								json_data = json_data.concat(data);								
+								json_data.forEach(function(item, i, arr) {									
+									console.log(item.magnet_link);
+						  });								
+						};
 						var append_items = function (i)
 						{
 							items_in_view = items_in_view + i;
@@ -46,6 +58,34 @@
 						var build_table = function()
 						{
 						return '<table class="table table-hover" id="rt">' + items_in_view +"</table>";
+						}
+						var magnet_a = function(item)
+						{
+						return '<a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
+																	item.hash+'>magnet</a>';
+						}
+						
+						var tabulator_init = function()
+						{
+						//create Tabulator on DOM element with id "example-table"
+						$("#results").tabulator({
+								height:"960px", 
+								fitColumns:true, 
+									columns:[ //Define Table COlumns
+											{title:"Category", field:"category", sorter:"string", width:150},
+											{title:"Caption", field:"caption", sorter:"string"},
+											{title:"Labels", field:"labels", sorter:"string", sortable:false},
+											{title:"Magnet", field:"magnet_link", sortable:false, align:"center"},
+												],
+    rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
+        alert("Row " + id + " Clicked!!!!");
+    },
+});
+						};
+						
+						var tabulator_update = function()
+						{
+								$("#results").tabulator("setData", json_data);
 						}
 						
             $(function(){	
@@ -85,12 +125,15 @@
 																	el = "<tr>"+el+"</tr>";
 																	markup = markup + el;																																		
 															});
+															merge_json(results);
 															console.log('content must be inserted');
 															append_items(markup);
-															$('#results').html(build_table());
+															//$('#results').html(build_table());																													
+															//$('#rt').DataTable();
 															console.log('button must visible');
 															$('#loadmore').show();
-															
+															tabulator_init(); 
+															tabulator_update();
 													}
 											});
 								};
@@ -106,12 +149,13 @@
                 $('#search').click( function(e) { items_in_view = ""; $('#results').html(""); p = 1; searcher(e); } );
                 
                 $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
-                
-                
+                               
             });
         </script> 
 			<!-- Latest compiled and minified JavaScript -->
 			<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>        
+			<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script> 
+			<script type="text/javascript" src="views/tabulator.js"></script>
 			
     </body>
 

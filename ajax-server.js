@@ -119,7 +119,7 @@ fetching.prototype.getFetcher = function()
 
 var app = express();
 
-
+app.use('/views', express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', function(req, res){
