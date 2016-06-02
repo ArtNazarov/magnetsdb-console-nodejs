@@ -73,12 +73,12 @@
 								fitColumns:true, 
 									columns:[ //Define Table COlumns
 											{title:"Category", field:"category", sorter:"string", width:150},
-											{title:"Caption", field:"caption", sorter:"string"},
-											{title:"Labels", field:"labels", sorter:"string", sortable:false},
+											{title:"Caption", field:"caption", sorter:"string",width:450},
+											{title:"Labels", field:"labels", sorter:"string", sortable:true},
 											{title:"Magnet", field:"magnet_link", sortable:false, align:"center"},
 												],
     rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
-        alert("Row " + id + " Clicked!!!!");
+        //alert("Row " + id + " Clicked!!!!");
     },
 });
 						};
