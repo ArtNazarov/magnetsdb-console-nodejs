@@ -43,8 +43,7 @@
 						var merge_json = function(data)
 						{
 						  data.forEach(function(item, i, arr) {
-									item.magnet_link = magnet_a(data);
-									console.log(item.magnet_link);
+									item.magnet_link = magnet_a(item);									
 						  });								
 								json_data = json_data.concat(data);								
 								json_data.forEach(function(item, i, arr) {									
@@ -132,7 +131,8 @@
 															//$('#rt').DataTable();
 															console.log('button must visible');
 															$('#loadmore').show();
-															tabulator_init(); 
+															
+																													
 															tabulator_update();
 													}
 											});
@@ -140,16 +140,18 @@
 								
 								$('#reset').click(function(e)
 								{
-										$('#rt').html("");
+										json_data = [];
 										items_in_view = "";
 										p = 1;
 										$('#loadmore').hide();
+										tabulator_update();
 								});
 								
-                $('#search').click( function(e) { items_in_view = ""; $('#results').html(""); p = 1; searcher(e); } );
+                $('#search').click( function(e) { items_in_view = ""; json_data = []; 
+                p = 1; searcher(e); } );
                 
                 $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
-                               
+								tabulator_init(); 	 
             });
         </script> 
 			<!-- Latest compiled and minified JavaScript -->
