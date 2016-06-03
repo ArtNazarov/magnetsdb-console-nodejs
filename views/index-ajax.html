@@ -7,9 +7,17 @@
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" type="text/css" href="views/tabulator.css"/>
+		<style>
+		h1.apptitle {
+    text-align: center;
+    color: #4bc1dc;    
+    font-size: 90px;
+    }
+		</style>
     </head>
-    <body>
+    <body>    
     <div class="container">
+				<h1 class='apptitle'>MagnetsDB</h1>
 				<div id='help' class='alert alert-info'>
 					<ul>
 						<li>Use + to point neсessary elements which MUST be in responce.</li>
@@ -38,7 +46,7 @@
 						<input class='col-md-4' type='button' id='loadmore' name='loadmore' value='Load more/Загрузить еще...'>
 					 </div>
         </div>
-        
+        <div id='status' class='row'></div>
         <div id='viewer' class='row'></div>
         <div id='results' class='row'></div>
         
@@ -126,6 +134,7 @@
 									  console.log(l);
 									  console.log(c);
 									  console.log(p);
+									  $('#status').html('wait while request processed...');
 										$.get(
 												{													
 													url: window.location.href+'ajax',
@@ -167,6 +176,7 @@
 																		webt($(this).data('magnet'));
 															
 											}); // end on
+											$('#status').html('Request done');
 								}
 								});
 								};
