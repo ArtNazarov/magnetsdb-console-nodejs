@@ -135,6 +135,7 @@
 									  console.log(c);
 									  console.log(p);
 									  $('#status').html('wait while request processed...');
+									  $("body").css("cursor", "progress");
 										$.get(
 												{													
 													url: window.location.href+'ajax',
@@ -176,7 +177,9 @@
 																		webt($(this).data('magnet'));
 															
 											}); // end on
+											
 											$('#status').html('Request done');
+											$("body").css("cursor", "default");
 								}
 								});
 								};
