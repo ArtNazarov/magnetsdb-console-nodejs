@@ -173,7 +173,8 @@ app.get('/ajax', function(req, res){
 	{
 	p = parseInt(query.page);
 	};	
-	var offset = (p-1) * 10;
+	var limit = 256;
+	var offset = (p-1) * limit;
 	var labels_part = "";
 	var category_part = "";
 	var caption_part = "";
@@ -199,7 +200,7 @@ app.get('/ajax', function(req, res){
 	
 	
 	
-	var db_req = "SELECT * FROM data WHERE " + wh_constr(caption_part, labels_part, category_part) + ordering_part +" LIMIT 10 OFFSET "+String(offset);
+	var db_req = "SELECT * FROM data WHERE " + wh_constr(caption_part, labels_part, category_part) + ordering_part +" LIMIT "+String(limit)+" OFFSET "+String(offset);
 	console.log(request);
 	console.log(offset);
 	console.log(db_req);
