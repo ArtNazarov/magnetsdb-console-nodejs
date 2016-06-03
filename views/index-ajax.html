@@ -74,7 +74,10 @@
 						lcl.btn = '<a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
 																	item.hash+'>magnet</a>';
 						lcl.player = '<span class="playbtn btn-sm btn-success" data-magnet="magnet:?xt=urn:btih:'+item.hash+'" >play</span>';
-						return lcl.btn+lcl.player;
+						var result = lcl.btn;
+						var player_enable = false;
+						if (player_enable) {result = result +"&nbsp;"+ lcl.player;};
+						return result;
 						}
 						
 						
