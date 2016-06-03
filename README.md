@@ -14,7 +14,12 @@ npm install body-parser
 npm install jade
 npm install fs
 npm install url
+npm install browserify
 ```
+
+run browserify
+
+browserify tabulator.js index-server.js  > packed.js
 
 run in console mode (command line tool)
 

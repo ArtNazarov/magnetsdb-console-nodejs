@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="views/tabulator.css"/>
     </head>
     <body>
+    <div class="container">
 				<div id='help' class='alert alert-info'>
 					<ul>
 						<li>Use + to point neсessary elements which MUST be in responce.</li>
@@ -16,30 +17,39 @@
 						<li>Use , to split elements in request</li>
 					</ul>
 				</div>
-				<div id="pan_ctrls" class='row-fluid' >
-							<label class='col-md-2' for='c'>Category/Категория</label>
-							<input class='col-md-2' type='text' name='c' id='c' value='Action'>
-							<label class='col-md-2' for='q'>Caption/Название</label>
-							<input class='col-md-2' type='text' name='q' id='q' value=''>
-							<label class='col-md-2' for='l'>Labels/Метки</label>
-							<input class='col-md-2' type='text' name='l' id='l' value=''>							
+				<div id="pan_ctrls" >
+				  <div class='row'>
+							<label class='col-md-2' for='c'>Category</label>
+							<input class='col-md-8' type='text' name='c' id='c' value='Action'>
+           </div>
+           <div class='row'>
+							<label class='col-md-2' for='q'>Caption</label>
+							<input class='col-md-8' type='text' name='q' id='q' value=''>
+						</div>
+						<div class='row'>
+							<label class='col-md-2  for='l'>Labels</label>
+							<input class='col-md-8' type='text' name='l' id='l' value=''>			
+						</div>
         </div>
-         <div id='controls' class='row-fluid'>
+         <div id='controls'>
+           <div class='row'>
 						<input class='col-md-4' type='button' id='reset' name='reset' value='Reset/Сброс'>					
 						<input class='col-md-4' type="button" id="search" value="Search/Поиск">									
 						<input class='col-md-4' type='button' id='loadmore' name='loadmore' value='Load more/Загрузить еще...'>
+					 </div>
         </div>
         
-        <div id='results'>														
-        </div>
+        <div id='viewer' class='row'></div>
+        <div id='results' class='row'></div>
         
        
-        
+     </div>   
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		     
     <script type="text/javascript">
 						var p = 1;
 						var items_in_view = "";
 						var json_data = [];
+						var cl;
 						var merge_json = function(data)
 						{
 						  data.forEach(function(item, i, arr) {
@@ -60,15 +70,20 @@
 						}
 						var magnet_a = function(item)
 						{
-						return '<a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
+						var lcl = {};
+						lcl.btn = '<a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
 																	item.hash+'>magnet</a>';
+						lcl.player = '<span class="playbtn btn-sm btn-success" data-magnet="magnet:?xt=urn:btih:'+item.hash+'" >play</span>';
+						return lcl.btn+lcl.player;
 						}
+						
+						
 						
 						var tabulator_init = function()
 						{
 						//create Tabulator on DOM element with id "example-table"
 						$("#results").tabulator({
-								height:"960px", 
+								height:"960px", 								
 								fitColumns:true, 
 									columns:[ //Define Table COlumns
 											{title:"Category", field:"category", sorter:"string", width:150},
@@ -80,6 +95,8 @@
         //alert("Row " + id + " Clicked!!!!");
     },
 });
+
+				
 						};
 						
 						var tabulator_update = function()
@@ -88,6 +105,9 @@
 						}
 						
             $(function(){	
+            
+            
+							
             
 								$('#loadmore').hide();
 								
@@ -134,8 +154,17 @@
 															
 																													
 															tabulator_update();
-													}
-											});
+															
+															var webt = window.WT;
+															
+														$('.playbtn').on('click', function(e)
+																		{
+																		console.log($(this).data('magnet'));
+																		webt($(this).data('magnet'));
+															
+											}); // end on
+								}
+								});
 								};
 								
 								$('#reset').click(function(e)
@@ -157,8 +186,7 @@
 			<!-- Latest compiled and minified JavaScript -->
 			<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>        
 			<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script> 
-			<script type="text/javascript" src="views/tabulator.js"></script>
-			
+			<script type="text/javascript" src="views/packed.js"></script>			
     </body>
 
     
