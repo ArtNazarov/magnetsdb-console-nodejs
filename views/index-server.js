@@ -6,15 +6,17 @@ var WebTor  = function(m)
 	
 	var client = new WebTorrent();
 	
-	var testing = true;
+	var testing = false;
 	
-	var torrentId = 'magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel-1024-surround.mp4';
+	var trackers = '&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io';
+	
+	var test_magnet = "magnet:?xt=urn:btih:6a9759bffd5c0af65319979fb7832189f4f3c35d&dn=sintel.mp4";
+	
+	var torrentId = test_magnet+trackers;
 	
 	if (!testing)
 	{
-	
-	torrentId = m+"&tr=udp%3A%2F%2Ftracker.publicbt.com:80&tr=udp%3A%2F%2Ftracker.openbittorrent.com:80&tr=http%3A%2F%2Fretracker.local%2Fannounce"; 
-	
+		torrentId = m+trackers; 
 	};
 	
 	
