@@ -6,7 +6,7 @@ var WebTor  = function(m)
 	
 	var client = new WebTorrent();
 	
-	var testing = false;
+	var testing = true;
 	
 	var trackers = '&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.webtorrent.io';
 	

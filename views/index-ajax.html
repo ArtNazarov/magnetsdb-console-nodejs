@@ -58,6 +58,15 @@
 						var items_in_view = "";
 						var json_data = [];
 						var cl;
+						
+						function copyToClipboard(text) {
+							var $temp = $("<input>");
+							$("body").append($temp);
+							$temp.val(text).select();
+							document.execCommand("copy");
+							$temp.remove();
+						};
+						
 						var merge_json = function(data)
 						{
 						  data.forEach(function(item, i, arr) {
@@ -83,7 +92,7 @@
 																	item.hash+'>magnet</a>';
 						lcl.player = '<span class="playbtn btn-sm btn-success" data-magnet="magnet:?xt=urn:btih:'+item.hash+'" >play</span>';
 						var result = lcl.btn;
-						var player_enable = false;
+						var player_enable = true;
 						if (player_enable) {result = result +"&nbsp;"+ lcl.player;};
 						return result;
 						}
@@ -104,7 +113,11 @@
 											{title:"Magnet", field:"magnet_link", sortable:false, align:"center"},
 												],
     rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
-        //alert("Row " + id + " Clicked!!!!");
+				console.log('row clicked');
+        var jQueryObject = $($.parseHTML(data.magnet_link));
+        var lMg = jQueryObject.last().data('magnet');							
+        $('#status').html(lMg);
+        copyToClipboard(lMg);
     },
 });
 
@@ -150,15 +163,18 @@
 															 //console.log(results);
 															 var markup = "";
 															 var el = "";
+															 var counter = 0;
 															 results.forEach(function(item, i, arr) {
 																	console.log(item);
-																	
+																	counter++;
+																	$('#status').html('Found items:'+String(counter));
 																	el = "<td>"+item.category+'</td><td>'+item.caption+'</td><td> '+item.labels+ '</td><td><a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
 																	item.hash+'>magnet</a></td>';		
 																	el = "<tr>"+el+"</tr>";
 																	markup = markup + el;																																		
-															});
+															});															
 															merge_json(results);
+															
 															console.log('content must be inserted');
 															append_items(markup);
 															//$('#results').html(build_table());																													
@@ -178,7 +194,7 @@
 															
 											}); // end on
 											
-											$('#status').html('Request done');
+											$('#status').html('Request done '+String(json_data.length));
 											$("body").css("cursor", "default");
 								}
 								});

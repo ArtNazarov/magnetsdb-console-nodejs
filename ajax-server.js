@@ -199,8 +199,9 @@ app.get('/ajax', function(req, res){
 	
 	
 	
-	
-	var db_req = "SELECT * FROM data WHERE " + wh_constr(caption_part, labels_part, category_part) + ordering_part +" LIMIT "+String(limit)+" OFFSET "+String(offset);
+	var whc = wh_constr(caption_part, labels_part, category_part);
+	if (whc.trim() == "") {whc = " ( 1=1 ) ";};
+	var db_req = "SELECT * FROM data WHERE " + whc + ordering_part +" LIMIT "+String(limit)+" OFFSET "+String(offset);
 	console.log(request);
 	console.log(offset);
 	console.log(db_req);
