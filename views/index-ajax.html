@@ -59,7 +59,19 @@
 						var items_in_view = "";
 						var json_data = [];
 						var cl;
+						
 						var cache = {};
+						
+
+						
+						if (localStorage.getItem('myCache') === null)
+						{
+							console.log('Client cache not found');
+						}
+						else
+						{						
+						cache = JSON.parse(localStorage.getItem('myCache'));
+						};
 						
 						function copyToClipboard(text) {
 							var $temp = $("<input>");
@@ -76,7 +88,7 @@
 						  });								
 								json_data = json_data.concat(data);								
 								json_data.forEach(function(item, i, arr) {									
-									console.log(item.magnet_link);
+									//console.log(item.magnet_link);
 						  });								
 						};
 						var append_items = function (i)
@@ -126,8 +138,15 @@
 				
 						};
 						
+						var cache_key = function(q, l, c, p)
+						{
+						var result = 'key_'+window.MD5('q'+q.trim()+'l'+l.trim()+'c'+c.trim()+'p'+String(p).trim());
+						console.log('cache key = ' + result);
+						return result;
+						}
 						
-						var real_request = function(q, l, c, p, ckey)
+						
+						var real_request = function(q, l, c, p)
 						{
 						  
 							$.get(
@@ -141,7 +160,8 @@
 													success: function(data) {                            																
 															 //console.log(data);
 															 var results = JSON.parse(data);
-															 cache[ckey] = results;		
+															 cache[cache_key(q, l, c, p)] = results;																 															
+															 localStorage.setItem('myCache', JSON.stringify(cache));
 															 process_results(results);
 											}
 						});
@@ -154,7 +174,7 @@
 															 var el = "";
 															 var counter = 0;
 															 results.forEach(function(item, i, arr) {
-																	console.log(item);
+																	//console.log(item);
 																	counter++;
 																	$('#status').html('Found items:'+String(counter));
 																	el = "<td>"+item.category+'</td><td>'+item.caption+'</td><td> '+item.labels+ '</td><td><a class="btn btn-sm btn-info" role="button" href=magnet:?xt=urn:btih:'+
@@ -164,11 +184,11 @@
 															});															
 															merge_json(results);
 															
-															console.log('content must be inserted');
+															//console.log('content must be inserted');
 															append_items(markup);
 															//$('#results').html(build_table());																													
 															//$('#rt').DataTable();
-															console.log('button must visible');
+															//console.log('button must visible');
 															$('#loadmore').show();
 															
 																													
@@ -178,7 +198,7 @@
 															
 														$('.playbtn').on('click', function(e)
 																		{
-																		console.log($(this).data('magnet'));
+																		//console.log($(this).data('magnet'));
 																		webt($(this).data('magnet'));
 															
 											}); // end on
@@ -206,27 +226,27 @@
 										l = document.getElementById('l').value;	
 									  c = document.getElementById('c').value;
 									  
-									  console.log(q);
-									  console.log(l);
-									  console.log(c);
-									  console.log(p);
+									  //console.log(q);
+									  //console.log(l);
+									  //console.log(c);
+									  //console.log(p);
 									  
 									  $('#status').html('wait while request processed...');
 										$("body").css("cursor", "progress");
 									  
-									  var ckey = 'q'+q.trim()+'l'+l.trim()+'c'+c.trim()+'p'+String(p).trim();
+									  var ckey = cache_key(q, l, c, p);
 									  var results = [];
-									  
-									  if (ckey in cache)
+
+									  if (cache.hasOwnProperty(ckey))
 									  {
 											 console.log('Fetch from client cache');
 											 process_results(cache[ckey]);
 									  }
 									  else 
 									  { // real request
-									    console.log('Exec ajax request started');
-											real_request(q, l, c, p, ckey); // call process_results internally
-											console.log('Exec ajax request ended');
+									    //console.log('Exec ajax request started');
+											real_request(q, l, c, p); // call process_results internally
+											//console.log('Exec ajax request ended');
 									  };
 									  
 																				
