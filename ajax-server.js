@@ -99,6 +99,7 @@ var db = new sqlite3.Database('main-sqlite.db');
 var url = require('url');
 var port = 44444;
 var upper_mode = false;
+var cache = {};
 
 
 var fetching = function (request)
@@ -202,9 +203,18 @@ app.get('/ajax', function(req, res){
 	var whc = wh_constr(caption_part, labels_part, category_part);
 	if (whc.trim() == "") {whc = " ( 1=1 ) ";};
 	var db_req = "SELECT * FROM data WHERE " + whc + ordering_part +" LIMIT "+String(limit)+" OFFSET "+String(offset);
+	
+	if (db_req in cache)
+	{
+		console.log('send from cache');
+		res.send(cache[db_req]);
+	}
+	else
+	{ // real request to database
 	console.log(request);
 	console.log(offset);
 	console.log(db_req);
+	
   var Render = new fetching(request);  
   var func = Render.getFetcher(Render); 
 	
@@ -216,11 +226,13 @@ app.get('/ajax', function(req, res){
                     rows.forEach(
                                     Render.getFetcher()
                                 );
-  
-										res.send(JSON.stringify(Render.rows.getRows()));
+										
+										cache[db_req] = JSON.stringify(Render.rows.getRows());
+										res.send(cache[db_req]);
                 
                 
             });		
+	};		
 });
 
 var server = app.listen(port);

@@ -54,10 +54,12 @@
      </div>   
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		     
     <script type="text/javascript">
+    
 						var p = 1;
 						var items_in_view = "";
 						var json_data = [];
 						var cl;
+						var cache = {};
 						
 						function copyToClipboard(text) {
 							var $temp = $("<input>");
@@ -124,32 +126,11 @@
 				
 						};
 						
-						var tabulator_update = function()
-						{
-								$("#results").tabulator("setData", json_data);
-						}
 						
-            $(function(){	
-            
-            
-							
-            
-								$('#loadmore').hide();
-								
-								var searcher = function(e){									
-										var markup = "";
-										var q;										
-											var q, l, c;										
-										q = document.getElementById('q').value;
-										l = document.getElementById('l').value;	
-									  c = document.getElementById('c').value;
-									  console.log(q);
-									  console.log(l);
-									  console.log(c);
-									  console.log(p);
-									  $('#status').html('wait while request processed...');
-									  $("body").css("cursor", "progress");
-										$.get(
+						var real_request = function(q, l, c, p, ckey)
+						{
+						  
+							$.get(
 												{													
 													url: window.location.href+'ajax',
 													data : { search : q, page : p , labels : l, category : c},
@@ -160,7 +141,15 @@
 													success: function(data) {                            																
 															 //console.log(data);
 															 var results = JSON.parse(data);
-															 //console.log(results);
+															 cache[ckey] = results;		
+															 process_results(results);
+											}
+						});
+						};
+						
+						var process_results = function(results)
+						{
+						//console.log(results);
 															 var markup = "";
 															 var el = "";
 															 var counter = 0;
@@ -193,12 +182,58 @@
 																		webt($(this).data('magnet'));
 															
 											}); // end on
-											
 											$('#status').html('Request done '+String(json_data.length));
 											$("body").css("cursor", "default");
-								}
-								});
+						};
+						
+						var tabulator_update = function()
+						{
+								$("#results").tabulator("setData", json_data);
+						}
+						
+            $(function(){	
+            
+            
+							
+            
+								$('#loadmore').hide();
+								
+								var searcher = function(e){									
+										var markup = "";
+										var q;										
+										var q, l, c;										
+										q = document.getElementById('q').value;
+										l = document.getElementById('l').value;	
+									  c = document.getElementById('c').value;
+									  
+									  console.log(q);
+									  console.log(l);
+									  console.log(c);
+									  console.log(p);
+									  
+									  $('#status').html('wait while request processed...');
+										$("body").css("cursor", "progress");
+									  
+									  var ckey = 'q'+q.trim()+'l'+l.trim()+'c'+c.trim()+'p'+String(p).trim();
+									  var results = [];
+									  
+									  if (ckey in cache)
+									  {
+											 console.log('Fetch from client cache');
+											 process_results(cache[ckey]);
+									  }
+									  else 
+									  { // real request
+									    console.log('Exec ajax request started');
+											real_request(q, l, c, p, ckey); // call process_results internally
+											console.log('Exec ajax request ended');
+									  };
+									  
+																				
+									
 								};
+								
+								
 								
 								$('#reset').click(function(e)
 								{
