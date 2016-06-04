@@ -161,8 +161,25 @@
 															 //console.log(data);
 															 var results = JSON.parse(data);
 															 cache[cache_key(q, l, c, p)] = results;																 															
+															 var cacheSizeMax = 8;
+															 var cacheSizeReal = 0;
+															 for (item in localStorage)
+															 {
+																cacheSizeReal += localStorage[item].length;
+															 };
+															 cacheSizeReal = ((cacheSizeReal * 2)/1024/1024).toFixed(2);
+															 console.log('cache size:'	+String(cacheSizeReal));
+															 if (cacheSizeReal >= cacheSizeMax)
+															 {
+																	// flush cache
+																	console.log('cache was removed');
+																	localStorage.removeItem('myCache');
+															 }
+															 else
+															 {															 
 															 localStorage.setItem('myCache', JSON.stringify(cache));
 															 process_results(results);
+															 };
 											}
 						});
 						};
