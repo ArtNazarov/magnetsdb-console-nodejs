@@ -8,6 +8,10 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" type="text/css" href="views/tabulator.css"/>
 		<style>
+		body
+		{
+background-color: #e8e8e8;
+		}
 		h1.apptitle {
     text-align: center;
     color: #4bc1dc;    
@@ -279,10 +283,18 @@
 								$("#results").tabulator("setData", json_data);
 						}
 						
+						var initUH = function()
+						{						
+						window.uh = window.userHistory();
+						};
+						
+					
+						
             $(function(){	
             
             
 							
+								initUH();
             
 								$('#loadmore').hide();
 								
@@ -298,6 +310,9 @@
 									  //console.log(l);
 									  //console.log(c);
 									  //console.log(p);
+									  
+									  
+									  window.updateAutocomplete(q, l, c, p);
 									  
 									  $('#status').html('wait while request processed...');
 										$("body").css("cursor", "progress");
@@ -364,39 +379,69 @@
 };
 								
 								// load items for autocompletion
+								// from userHistory
+								
+							
+								
+							
+								
+								var autocompleteUI = function(uh)
+								{
+								
+								
+								var uniq = function(arr) 
+								{
+								return arr.filter(function(item, pos) {
+								
+									return arr.indexOf(item) == pos;
+								});
+								}
+
+								
 								
 								var loadAc_Categories = function()
 								{
-								return ['Action'];
+									return uniq(uh.loadFromUH('c'));
 								};
 								
 								var loadAc_Labels = function()
 								{
-								return ['RUS'];
+									return uniq(uh.loadFromUH('l'));
 								};
 								
 								var loadAc_Requests = function()
 								{
-								return ['Delta'];
+									return uniq(uh.loadFromUH('q'));
 								}
 								
-								var autocompleteUI = function()
+								
+									var updateAutocomplete = function(q, l, c, p)
+						{
+								window.uh.addReq(q, l, c, p);
+							  destroyComponents();
+							  initComponents();
+						};
+						
+								window.updateAutocomplete = updateAutocomplete;
+								
+								var destroyComponents = function()
+								{
+									$('input[name=q]').typeahead('destroy');
+									$('input[name=l]').typeahead('destroy');
+									$('input[name=c]').typeahead('destroy');
+								}
+								
+								var initComponents = function()
 								{
 								
-								
-							var ac_categories = loadAc_Categories();
-							var ac_labels = loadAc_Labels();
-							var ac_requests = loadAc_Requests();
-
-
-							$('input[name=c]').typeahead({
+									$('input[name=c]').typeahead({
 									hint: true,
 									highlight: true,
 									minLength: 1
 							},
 								{
 									name: 'ac_categories',
-									source: substringMatcher(ac_categories)
+									source: substringMatcher(loadAc_Categories())
 								});
 								
 								
@@ -408,7 +453,7 @@
 							},
 								{
 									name: 'ac_labels',
-									source: substringMatcher(ac_labels)
+									source: substringMatcher(loadAc_Labels())
 								});
 								
 								
@@ -419,12 +464,22 @@
 							},
 								{
 									name: 'ac_requests',
-									source: substringMatcher(ac_requests)
+									source: substringMatcher(loadAc_Requests())
 								});
 								
 								};
+
+
+								initComponents();
 								
-								autocompleteUI();
+								};
+								
+								
+								autocompleteUI(window.uh);
+								
+								// ***************** userHistory
+								
+								
 								
             });
         </script> 

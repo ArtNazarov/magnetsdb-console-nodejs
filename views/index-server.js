@@ -199,6 +199,52 @@ var MD5 = function (string) {
 	return temp.toLowerCase();
 };
 
+var userHistory = function()
+{
+	var ho = function(){
+		this.history = {};
+		if ('history' in localStorage)
+		{
+			this.loadReqs();
+			console.log('Load from storage');
+		}
+		else
+		{
+			console.log('history not found');
+		};
+	};
+	
+	ho.prototype.history = {};
+	ho.prototype.getKey = function(q, l, c, p)
+	{
+			return MD5('q'+q+'l'+'c'+c+'p'+String(p));
+	};
+	ho.prototype.addReq = function(q, l, c, p)
+	{
+		this.history[this.getKey(q, l, c, p)] = {'q' : q, 'l' : l, 'c' : c, 'p' : p };		
+		this.saveReqs();
+	};
+	ho.prototype.saveReqs = function()
+	{
+		localStorage.setItem('history', JSON.stringify(this.history));
+	};
+	ho.prototype.loadReqs = function()
+	{
+		this.history = JSON.parse(localStorage.getItem('history'));
+	};
+	
+	ho.prototype.loadFromUH = function(key)
+	{
+		var arr = [];
+		for (id in this.history)
+		{
+			arr.push(uh.history[id][key]);
+		};
+		return arr;
+	}
+	
+	return new ho();
+};
 
 
 var WebTor  = function(m)
@@ -239,3 +285,4 @@ var WebTor  = function(m)
 
 window.WT = WebTor;
 window.MD5 = MD5;
+window.userHistory = userHistory;
