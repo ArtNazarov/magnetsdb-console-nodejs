@@ -13,6 +13,56 @@
     color: #4bc1dc;    
     font-size: 90px;
     }
+    .typeahead, .tt-query, .tt-hint {
+  background-color:#FFFFFF;  
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 24px;
+	height: 30px;
+	line-height: 30px;
+	outline: medium none;
+	padding: 8px 12px;
+	width: 396px;
+}
+.typeahead {
+	background-color: #FFFFFF;
+}
+.typeahead:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-dropdown-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	margin-top: 12px;
+	padding: 8px 0;
+	width: 422px;
+}
+.tt-suggestion {
+	font-size: 24px;
+	line-height: 24px;
+	padding: 3px 20px;
+}
+.tt-suggestion.tt-is-under-cursor {
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}
+.tt-selectable
+{
+	background-color:#FFFFFF;
+	box-shadow:2px 2px 2px #000000;
+	border:1px #cccccc;
+}
 		</style>
     </head>
     <body>    
@@ -28,15 +78,15 @@
 				<div id="pan_ctrls" >
 				  <div class='row'>
 							<label class='col-md-2' for='c'>Category</label>
-							<input class='col-md-8' type='text' name='c' id='c' value='Action'>
+							<input class="col-md-8 typeahead tt-query" autocomplete="off" spellcheck="false" type="text" name="c" id="c" value='Action'>
            </div>
            <div class='row'>
 							<label class='col-md-2' for='q'>Caption</label>
-							<input class='col-md-8' type='text' name='q' id='q' value=''>
+							<input class="col-md-8 typeahead tt-query" autocomplete="off" spellcheck="false"  type='text' name='q' id='q' value=''>
 						</div>
 						<div class='row'>
 							<label class='col-md-2  for='l'>Labels</label>
-							<input class='col-md-8' type='text' name='l' id='l' value=''>			
+							<input class="col-md-8 typeahead tt-query" autocomplete="off" spellcheck="false" type='text' name='l' id='l' value=''>			
 						</div>
         </div>
          <div id='controls'>
@@ -53,6 +103,7 @@
        
      </div>   
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>		     
+    <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
     <script type="text/javascript">
     
 						var p = 1;
@@ -285,7 +336,96 @@
                 p = 1; searcher(e); } );
                 
                 $('#loadmore').click( function(e) {p = p + 1; searcher(e);} );				
-								tabulator_init(); 	 
+								tabulator_init(); 	
+								
+								
+								// ********************** autocompletion
+								
+								var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+								
+								// load items for autocompletion
+								
+								var loadAc_Categories = function()
+								{
+								return ['Action'];
+								};
+								
+								var loadAc_Labels = function()
+								{
+								return ['RUS'];
+								};
+								
+								var loadAc_Requests = function()
+								{
+								return ['Delta'];
+								}
+								
+								var autocompleteUI = function()
+								{
+								
+								
+							var ac_categories = loadAc_Categories();
+							var ac_labels = loadAc_Labels();
+							var ac_requests = loadAc_Requests();
+
+
+							$('input[name=c]').typeahead({
+									hint: true,
+									highlight: true,
+									minLength: 1
+							},
+								{
+									name: 'ac_categories',
+									source: substringMatcher(ac_categories)
+								});
+								
+								
+								
+								$('input[name=l]').typeahead({
+									hint: true,
+									highlight: true,
+									minLength: 1
+							},
+								{
+									name: 'ac_labels',
+									source: substringMatcher(ac_labels)
+								});
+								
+								
+								$('input[name=q]').typeahead({
+									hint: true,
+									highlight: true,
+									minLength: 1
+							},
+								{
+									name: 'ac_requests',
+									source: substringMatcher(ac_requests)
+								});
+								
+								};
+								
+								autocompleteUI();
+								
             });
         </script> 
 			<!-- Latest compiled and minified JavaScript -->
