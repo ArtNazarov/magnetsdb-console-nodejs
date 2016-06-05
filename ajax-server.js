@@ -98,9 +98,16 @@ var fs = require('fs');
 var db = new sqlite3.Database('main-sqlite.db');
 var url = require('url');
 var port = 44444;
+var cacheSizeMaxMB = 10;
 var upper_mode = false;
 var cache = {};
 
+
+var getFilesizeMB = function(filename) {
+	var stats = fs.statSync(filename);
+	var fileSizeInBytes = stats["size"];
+	return (fileSizeInBytes /  (1024 * 1024)).toFixed(2);
+};
 
 var fetching = function (request)
                     {        
@@ -274,9 +281,21 @@ app.get('/ajax', function(req, res){
                                 );
 										
 										cache[db_req] = JSON.stringify(Render.rows.getRows());
-										cache_save();
+										
+										
+										
+										
 										res.send(cache[db_req]);
-                
+										var cacheSize = getFilesizeMB('./cache.json');
+										console.log('cache size:'+String(cacheSize)+' MB');
+										
+										if (cacheSize > cacheSizeMaxMB)
+										{
+											cache = {};
+											console.log('cache cleared');
+										};
+										
+										cache_save();                
                 
             });		
 	};		
