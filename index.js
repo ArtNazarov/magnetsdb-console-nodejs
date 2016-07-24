@@ -15,7 +15,8 @@ function show_help(){
 	console.log('/next - next page');
 	console.log('/category name - set category');
 	console.log('/limit number - change limit of records at one page');
-	console.log('!quit - exit app');
+	console.log('/quit - exit app');
+	console.log('other string - request to database');
 }
 
 function add_result(row){
@@ -59,7 +60,7 @@ function performRequest()
 			last_req = request;
 		};
 		
-		if (request == '!quit') 
+		if (request == '/quit') 
 		{
 			process.exit();
 		}
@@ -115,5 +116,5 @@ function performRequest()
 	});
 }
 
-
+show_help();
 performRequest();
