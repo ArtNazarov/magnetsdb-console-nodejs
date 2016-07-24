@@ -5,12 +5,15 @@ var p = 1;
 var limit = 10;
 var last_req = "";
 var results = [];
+var category = "";
+var sql = "";
 
 var exec = require('child_process').exec;
 
 function show_help(){
 	console.log('/prev - previous page');
 	console.log('/next - next page');
+	console.log('/category name - set category');
 	console.log('/limit number - change limit of records at one page');
 	console.log('!quit - exit app');
 }
@@ -24,7 +27,14 @@ function make_request(db, request)
   
 	db.serialize(function() { 		
 		offset = limit*(p-1);				
-		db.each("SELECT * FROM data WHERE caption LIKE '%"+request+"%' ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset), function(err, row) {			
+		
+		sql = "SELECT * FROM data WHERE caption LIKE '%"+request+"%' ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
+		
+		if (category != ""){
+			sql = "SELECT * FROM data WHERE caption LIKE '%"+request+"%' AND ( category LIKE '%"+category+"%' ) ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
+		};
+		
+		db.each(sql, function(err, row) {			
 			add_result(row);			
 			console.log('Record No '+String(results.length));
 			console.log('Category: ' + row.category);
@@ -63,6 +73,11 @@ function performRequest()
 		{
 			limit = parseInt(request.split(' ')[1]);
 			request = last_req;
+		};
+		
+		if (request.indexOf('/category') > -1)
+		{
+			category = request.split(' ')[1];			
 		};
 		
 		if (request.indexOf('/download') > -1)
