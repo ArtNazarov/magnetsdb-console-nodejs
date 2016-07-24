@@ -7,6 +7,7 @@ var last_req = "";
 var results = [];
 var category = "";
 var sql = "";
+var labels = "";
 
 var exec = require('child_process').exec;
 
@@ -15,6 +16,7 @@ function show_help(){
 	console.log('/next - next page');
 	console.log('/category name - set category');
 	console.log('/limit number - change limit of records at one page');
+	console.log('/labels string - add labels to request');
 	console.log('/quit - exit app');
 	console.log('other string - request to database');
 }
@@ -29,10 +31,12 @@ function make_request(db, request)
 	db.serialize(function() { 		
 		offset = limit*(p-1);				
 		
-		sql = "SELECT * FROM data WHERE caption LIKE '%"+request+"%' ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
+		var labels_part = "OR (labels LIKE '%"+labels+"%')";
+		
+		sql = "SELECT * FROM data WHERE ( caption LIKE '%"+request+"%') " + labels_part + "  ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
 		
 		if (category != ""){
-			sql = "SELECT * FROM data WHERE caption LIKE '%"+request+"%' AND ( category LIKE '%"+category+"%' ) ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
+			sql = "SELECT * FROM data WHERE ( caption LIKE '%"+request+"%') " +labels_part+ "  AND ( category LIKE '%"+category+"%' ) ORDER BY caption LIMIT "+String(limit)+" OFFSET "+String(offset);
 		};
 		
 		db.each(sql, function(err, row) {			
@@ -76,6 +80,11 @@ function performRequest()
 			request = last_req;
 		};
 		
+		if (request.indexOf('/labels') > -1)
+		{
+			labels = request.split(' ')[1];			
+		};
+		
 		if (request.indexOf('/category') > -1)
 		{
 			category = request.split(' ')[1];			
@@ -83,15 +92,13 @@ function performRequest()
 		
 		if (request.indexOf('/download') > -1)
 		{
-			var downloadId = parseInt(request.split(' ')[1]);						
-			downloadId --;
-			console.log(results.length);
-			console.log('downloadId '+ downloadId);
-			console.log(results[downloadId]);
-			if (results.length>0)
+			var downloadId = request.split(' ').slice(1).map( (x) => parseInt(x-1) );									
+			console.log(results.length);			
+			console.log(downloadId);
+			for (var i=0;i<downloadId.length;i++)
 			{
-			console.log("qbittorrent magnet:?xt=urn:btih:"+results[downloadId].hash); 			
-			exec("qbittorrent magnet:?xt=urn:btih:"+results[downloadId].hash); 			
+			console.log("qbittorrent magnet:?xt=urn:btih:"+results[downloadId[i]].hash); 			
+			exec("qbittorrent magnet:?xt=urn:btih:"+results[downloadId[i]].hash); 			
 			};
 			request = last_req;			
 		};
