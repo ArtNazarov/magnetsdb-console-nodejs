@@ -129,15 +129,21 @@ var actionOnDownload = function(){
 	request = last_req;			
 }	
 
-var actionOnNext = function(){
+var actionOnNext = function(f){
+	return function(){
 	p = p + 1;
 	request = last_req;
+	f();
+	};
 }
 
-var actionOnPrev = function(){
+var actionOnPrev = function(f){
+	return function(){
 	p = p - 1;
 	if (p<=0) {p = 1;};
 	request = last_req;		
+	f();
+	};
 }
 
 var actionOnSearch = function(){
@@ -171,8 +177,7 @@ var actionOnSearch = function(){
 var prepareRequest = function(d, checks){
 	request = d.toString().trim();	
 	
-	if ((request.charAt(0) != '!') && (request.charAt(0) != '/'))
-	{
+	if (request.indexOf('/search') > -1){
 		last_req = request;
 	};
 	
@@ -185,8 +190,8 @@ var actions = {
 	"/limit" : actionOnLimit,
 	"/labels" : actionOnLabels,
 	"/category" : actionOnCategory,
-	"/prev"     : actionOnPrev,
-	"/next"     : actionOnNext,
+	"/prev"     : actionOnPrev(actionOnSearch),
+	"/next"     : actionOnNext(actionOnSearch),
 	"/search"   : actionOnSearch,
 	"/download" : actionOnDownload
 }
