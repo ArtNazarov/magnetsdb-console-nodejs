@@ -22,6 +22,14 @@ function show_help(){
 	console.log('/labels string - add labels to request');
 	console.log('/quit - exit app');
 	console.log('/search string - request to database');
+	console.log('In categories, labels and caption you can use conditions:');
+	console.log('+word - word must be found');
+	console.log('?word - word maybe be found');
+	console.log('-word - word must be excluded');	
+	console.log('+-word - must not be like word');
+	console.log('?-word - may not be like word');
+	console.log('Split words by commas, for example:');
+	console.log('word,+word2,-word3');
 }
 
 function add_cache(){
@@ -59,18 +67,58 @@ function row_handler(row){
 	};
 }
 
+function like_expr(variable, condition){
+	var rt = "";
+	var lg = "";
+  var nt = "";
+	var ix = 0;
+	
+	condition.split(",").map( (v) => {
+		
+		lg = " AND ";
+		ch = 0;
+		nt = "";
+		
+		if (v.charAt(0) == "?"){
+			lg = " OR ";
+			ch = 1;
+		};
+		
+		if (v.charAt(0) == "+"){
+			lg = " AND ";
+			ch = 1;
+		};
+		
+		if (v.charAt(ch) == "-"){
+			nt = " NOT ";
+		};
+		
+		if (ix > 0){
+		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+v.slice(ch)+"%' ) ";
+		}
+		else {
+			rt = rt + nt + " ( " + variable + " LIKE '%"+v.slice(ch)+"%' ) ";
+		};
+		
+		ix += 1;
+		
+	});
+	
+	return rt;
+}
+
 function build_sql_request(){
 	offset = limit*(p-1);				
 	var op = "SELECT * FROM data WHERE ";
 	var labels_part = "";
 	var category_part = "";
-	var caption_part = " ( caption LIKE '%"+request+"%') ";
+	var caption_part =  like_expr('caption', request);
 	var order_part = "  ORDER BY caption ";
 	var limit_part = " LIMIT "+String(limit);
 	var offset_part = " OFFSET "+String(offset);	
 	
 	if (labels != ""){	
-		labels_part = " OR (labels LIKE '%"+labels+"%') ";
+		labels_part = ' AND '+like_expr('labels', labels);
 	};
 	
 	if (category != ""){
