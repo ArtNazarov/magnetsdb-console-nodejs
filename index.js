@@ -10,6 +10,8 @@ var sql = "";
 var labels = "";
 var cache = {};
 var cached = false;
+var order_field = ' caption ';
+var ordering = ' ASC ';
 
 
 var exec = require('child_process').exec;
@@ -20,6 +22,8 @@ function show_help(){
 	console.log('/category name - set category');
 	console.log('/limit number - change limit of records at one page');
 	console.log('/labels string - add labels to request');
+	console.log('/ordering field asc - order by field asc, field = caption or labels or category');
+	console.log('/ordering field desc - order by field desc, field = caption or labels or category');
 	console.log('/quit - exit app');
 	console.log('/search string - request to database');
 	console.log('In categories, labels and caption you can use conditions:');
@@ -114,8 +118,11 @@ function build_sql_request(){
 	var op = "SELECT * FROM data WHERE ";
 	var labels_part = "";
 	var category_part = "";
-	var caption_part =  " ( "+like_expr('caption', request)+" ) ";
-	var order_part = "  ORDER BY caption ";
+	var caption_part = " ( 1 = 1 )";
+	if (request != ""){
+		caption_part =  " ( "+like_expr('caption', request)+" ) ";
+	};
+	var order_part = "  ORDER BY " + order_field + " " + ordering+ " ";
 	var limit_part = " LIMIT "+String(limit);
 	var offset_part = " OFFSET "+String(offset);	
 	
@@ -166,6 +173,11 @@ var actionOnLabels = function(){
 
 var actionOnCategory = function(){
 	category = request.split(' ')[1];
+}
+
+var actionOnOrdering = function(){
+	order_field = request.split(' ')[1];
+	ordering = request.split(' ')[2];
 }
 
 var actionOnDownload = function(){
@@ -243,7 +255,8 @@ var actions = {
 	"/prev"     : actionOnPrev(actionOnSearch),
 	"/next"     : actionOnNext(actionOnSearch),
 	"/search"   : actionOnSearch,
-	"/download" : actionOnDownload
+	"/download" : actionOnDownload,
+	"/ordering" : actionOnOrdering
 }
 
 var checkAction = function(){
