@@ -112,13 +112,13 @@ function build_sql_request(){
 	var op = "SELECT * FROM data WHERE ";
 	var labels_part = "";
 	var category_part = "";
-	var caption_part =  like_expr('caption', request);
+	var caption_part =  " ( "+like_expr('caption', request)+" ) ";
 	var order_part = "  ORDER BY caption ";
 	var limit_part = " LIMIT "+String(limit);
 	var offset_part = " OFFSET "+String(offset);	
 	
 	if (labels != ""){	
-		labels_part = ' AND '+like_expr('labels', labels);
+		labels_part = " AND ("+like_expr('labels', labels)+" ) ";
 	};
 	
 	if (category != ""){
