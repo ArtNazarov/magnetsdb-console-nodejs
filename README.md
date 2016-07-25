@@ -25,6 +25,42 @@ run in console mode (command line tool)
 
 ```node index.js```
 
+Using index.js
+==============
+
+In terminal you can use commands
+
+```
+/prev - previous page
+/next - next page
+/category name - set category
+/limit number - change limit of records at one page
+/labels string - add labels to request
+/ordering field asc - order by field asc, field = caption or labels or category
+/ordering field desc - order by field desc, field = caption or labels or category
+/quit - exit app
+/search string - request to database
+In categories, labels and caption you can use conditions:
++word - word must be found
+?word - word maybe be found
+-word - word must be excluded
++-word - must not be like word
+?-word - may not be like word
+Split words by commas, for example:
+word,+word2,-word3
+```
+
+for example:
+```
+/category test,+-other
+/labels tag1,+-tag2,?-tag3
+/limit 50
+/ordering category desc
+/search Something one,+Something other
+/download 1 15
+/quit
+```
+
 run as web server without ajax interface
 
 ```node server.js```
