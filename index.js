@@ -173,7 +173,7 @@ var actionOnLabels = function(){
 }
 
 var actionOnCategory = function(){
-	category = request.split(' ')[1];
+	category = request.substr('/category'.length+1);	
 }
 
 var actionOnOrdering = function(){
