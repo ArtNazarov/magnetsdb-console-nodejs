@@ -91,13 +91,15 @@ function like_expr(variable, condition){
 		
 		if (v.charAt(ch) == "-"){
 			nt = " NOT ";
+			ch = ch + 1;
 		};
 		
+					
 		if (ix > 0){
-		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+v.slice(ch)+"%' ) ";
+		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+v.substr(ch)+"%' ) ";
 		}
 		else {
-			rt = rt + nt + " ( " + variable + " LIKE '%"+v.slice(ch)+"%' ) ";
+			rt = rt + nt + " ( " + variable + " LIKE '%"+v.substr(ch)+"%' ) ";
 		};
 		
 		ix += 1;
@@ -122,7 +124,7 @@ function build_sql_request(){
 	};
 	
 	if (category != ""){
-		category_part = "  AND ( category LIKE '%"+category+"%' ) ";
+		category_part = "  AND ( "+like_expr('category', category) + " ) ";
 	}
 	
 	sql = op+caption_part+labels_part+category_part+ order_part+limit_part+offset_part;
