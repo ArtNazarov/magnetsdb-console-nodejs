@@ -12,6 +12,7 @@ var cache = {};
 var cached = false;
 var order_field = ' caption ';
 var ordering = ' ASC ';
+var last_caption = "";
 
 
 var exec = require('child_process').exec;
@@ -211,6 +212,12 @@ var actionOnPrev = function(f){
 var actionOnSearch = function(){
 	
 	request = request.slice("/search".length+1);
+	if (request != ""){
+		last_caption = request;
+	} else
+	{
+		request = last_caption;
+	};
 	
 	console.log('search:', request);
 	
