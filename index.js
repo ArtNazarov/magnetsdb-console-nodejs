@@ -13,6 +13,9 @@ var cached = false;
 var order_field = ' caption ';
 var ordering = ' ASC ';
 var last_caption = "";
+var config = {
+	 sensitive : 'on'
+};
 
 
 var exec = require('child_process').exec;
@@ -26,6 +29,8 @@ function show_help(){
 	console.log('/ordering field asc - order by field asc, field = caption or labels or category');
 	console.log('/ordering field desc - order by field desc, field = caption or labels or category');
 	console.log('/quit - exit app');
+	console.log('/config key value - set configuration key, example:');
+	console.log('/config sensitive off');
 	console.log('/search string - request to database');
 	console.log('In categories, labels and caption you can use conditions:');
 	console.log('+word - word must be found');
@@ -53,6 +58,14 @@ function in_cache(sql){
 
 function add_result(row){
 	results.push(row);	
+}
+
+function wrap_string(v){
+	if (config.sensitive == 'off'){
+		return v.toUpperCase();
+	}
+	else
+	{ return v;	};
 }
 
 function row_handler(row){
@@ -99,12 +112,29 @@ function like_expr(variable, condition){
 			ch = ch + 1;
 		};
 		
-					
+		
+		if (config.sensitive == 'on')
+		{					
+			
 		if (ix > 0){
-		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+v.substr(ch)+"%' ) ";
+		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 		}
 		else {
-			rt = rt + nt + " ( " + variable + " LIKE '%"+v.substr(ch)+"%' ) ";
+			rt = rt + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+		};
+		
+			
+		}
+		else
+		{
+			
+			if (ix > 0){
+				rt = rt + lg + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+			}
+			else {
+				rt = rt + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+			};
+			
 		};
 		
 		ix += 1;
@@ -153,6 +183,15 @@ function make_request(db)
 	});
 	
 	
+}
+
+var actionOnConfig = function(){
+	var temp = request.split(' ');
+	if (temp.length < 3)
+	{
+		console.log(config[temp[1]]);
+	}
+	config[temp[1]] = temp[2];
 }
 
 var actionOnQuit = function(){
@@ -263,7 +302,8 @@ var actions = {
 	"/next"     : actionOnNext(actionOnSearch),
 	"/search"   : actionOnSearch,
 	"/download" : actionOnDownload,
-	"/ordering" : actionOnOrdering
+	"/ordering" : actionOnOrdering,
+	"/config"   : actionOnConfig
 }
 
 var checkAction = function(){
