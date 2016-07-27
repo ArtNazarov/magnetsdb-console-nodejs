@@ -14,7 +14,7 @@ var order_field = ' caption ';
 var ordering = ' ASC ';
 var last_caption = "";
 var config = {
-	 sensitive : 'on'
+	sensitive : 'on'
 };
 
 
@@ -71,13 +71,13 @@ function wrap_string(v){
 function row_handler(row){
 	if (row)
 	{
-	//console.log(row);
-	add_result(row);			
-	console.log('Record No '+String(results.length));
-	console.log('Category: ' + row.category);
-	console.log('Caption: '+ row.caption);
-	console.log('Labels: '+ row.labels);
-	console.log('Hash: '+ row.hash);
+		//console.log(row);
+		add_result(row);			
+		console.log('Record No '+String(results.length));
+		console.log('Category: ' + row.category);
+		console.log('Caption: '+ row.caption);
+		console.log('Labels: '+ row.labels);
+		console.log('Hash: '+ row.hash);
 	}
 	else
 	{
@@ -88,7 +88,7 @@ function row_handler(row){
 function like_expr(variable, condition){
 	var rt = "";
 	var lg = "";
-  var nt = "";
+	var nt = "";
 	var ix = 0;
 	
 	condition.split(",").map( (v) => {
@@ -116,23 +116,23 @@ function like_expr(variable, condition){
 		if (config.sensitive == 'on')
 		{					
 			
-		if (ix > 0){
-		rt = rt + lg + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
-		}
-		else {
-			rt = rt + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
-		};
-		
+			if (ix > 0){
+				rt = rt + lg + nt + " trim( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+			}
+			else {
+				rt = rt + nt + " trim( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+			};
+			
 			
 		}
 		else
 		{
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " trim( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " trim( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 		};
@@ -146,7 +146,7 @@ function like_expr(variable, condition){
 
 function build_sql_request(){
 	offset = limit*(p-1);				
-	var op = "SELECT * FROM data WHERE ";
+	var op = "SELECT trim(category) as category,trim(caption) as caption,trim(labels) as labels,trim(hash) as hash FROM data WHERE ";
 	var labels_part = "";
 	var category_part = "";
 	var caption_part = " ( 1 = 1 )";
@@ -166,7 +166,7 @@ function build_sql_request(){
 	}
 	
 	sql = op+caption_part+labels_part+category_part+ order_part+limit_part+offset_part;
-  //console.log('builded:', sql);
+	//console.log('builded:', sql);
 }	
 
 function make_request(db)
@@ -233,18 +233,18 @@ var actionOnDownload = function(){
 
 var actionOnNext = function(f){
 	return function(){
-	p = p + 1;
-	request = last_req;
-	f();
+		p = p + 1;
+		request = last_req;
+		f();
 	};
 }
 
 var actionOnPrev = function(f){
 	return function(){
-	p = p - 1;
-	if (p<=0) {p = 1;};
-	request = last_req;		
-	f();
+		p = p - 1;
+		if (p<=0) {p = 1;};
+		request = last_req;		
+		f();
 	};
 }
 
@@ -311,9 +311,9 @@ var checkAction = function(){
 	for (var i in actions){
 		//console.log(i);
 		if (request.indexOf(i)>-1){
-				//console.log('found:', i);
-				actions[i]();
-				break;
+			//console.log('found:', i);
+			actions[i]();
+			break;
 		};
 	};	
 }
@@ -332,3 +332,4 @@ function waitRequests(){
 
 show_help();
 waitRequests();
+
