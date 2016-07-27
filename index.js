@@ -117,10 +117,10 @@ function like_expr(variable, condition){
 		{					
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " trim( " + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " trim( " + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 			
@@ -129,10 +129,10 @@ function like_expr(variable, condition){
 		{
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " trim( UPPER(" + variable + ")) LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " trim( UPPER(" + variable + ")) LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 		};
@@ -146,7 +146,7 @@ function like_expr(variable, condition){
 
 function build_sql_request(){
 	offset = limit*(p-1);				
-	var op = "SELECT trim(category) as category,trim(caption) as caption,trim(labels) as labels,trim(hash) as hash FROM data WHERE ";
+	var op = "SELECT * FROM data WHERE ";
 	var labels_part = "";
 	var category_part = "";
 	var caption_part = " ( 1 = 1 )";
@@ -332,4 +332,3 @@ function waitRequests(){
 
 show_help();
 waitRequests();
-
