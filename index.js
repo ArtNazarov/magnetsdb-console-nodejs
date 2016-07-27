@@ -117,10 +117,10 @@ function like_expr(variable, condition){
 		{					
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " trim( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " trim( " + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " trim( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " trim( " + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 			
@@ -129,10 +129,10 @@ function like_expr(variable, condition){
 		{
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " trim( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " trim( UPPER(" + variable + ")) LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " trim( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " trim( UPPER(" + variable + ")) LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 		};
