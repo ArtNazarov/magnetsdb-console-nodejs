@@ -14,7 +14,8 @@ var order_field = ' caption ';
 var ordering = ' ASC ';
 var last_caption = "";
 var config = {
-	sensitive : 'on'
+	sensitive : 'on',
+	full : 'on'
 };
 
 
@@ -31,6 +32,7 @@ function show_help(){
 	console.log('/quit - exit app');
 	console.log('/config key value - set configuration key, example:');
 	console.log('/config sensitive off');
+	console.log('/config full off');
 	console.log('/search string - request to database');
 	console.log('In categories, labels and caption you can use conditions:');
 	console.log('+word - word must be found');
@@ -90,6 +92,7 @@ function like_expr(variable, condition){
 	var lg = "";
 	var nt = "";
 	var ix = 0;
+	var fl = "";
 	
 	condition.split(",").map( (v) => {
 		
@@ -112,15 +115,16 @@ function like_expr(variable, condition){
 			ch = ch + 1;
 		};
 		
+		if (config.full == 'on') { fl = '%';}; 
 		
 		if (config.sensitive == 'on')
 		{					
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " ( " + variable + " LIKE '" + fl +wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " ( " + variable + " LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " ( " + variable + " LIKE '"+fl+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 			
@@ -129,10 +133,10 @@ function like_expr(variable, condition){
 		{
 			
 			if (ix > 0){
-				rt = rt + lg + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + lg + nt + " ( UPPER(" + variable + ") LIKE '"+ fl +wrap_string(v.substr(ch))+"%' ) ";
 			}
 			else {
-				rt = rt + nt + " ( UPPER(" + variable + ") LIKE '%"+wrap_string(v.substr(ch))+"%' ) ";
+				rt = rt + nt + " ( UPPER(" + variable + ") LIKE '"+fl+wrap_string(v.substr(ch))+"%' ) ";
 			};
 			
 		};
