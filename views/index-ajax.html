@@ -89,7 +89,7 @@ background-color: #e8e8e8;
 							<input class="col-md-8 typeahead tt-query" autocomplete="off" spellcheck="false"  type='text' name='q' id='q' value=''>
 						</div>
 						<div class='row'>
-							<label class='col-md-2  for='l'>Labels</label>
+							<label class='col-md-2'  for='l'>Labels</label>
 							<input class="col-md-8 typeahead tt-query" autocomplete="off" spellcheck="false" type='text' name='l' id='l' value=''>			
 						</div>
         </div>
@@ -265,16 +265,18 @@ background-color: #e8e8e8;
 															
 																													
 															tabulator_update();
-															
+															/*
 															var webt = window.WT;
-															
+														
 														$('.playbtn').on('click', function(e)
 																		{
 																		//console.log($(this).data('magnet'));
 																		webt($(this).data('magnet'));
+                                                                                                                                               
 															
-											}); // end on
-											$('#status').html('Request done '+String(json_data.length));
+											}); // end on 
+	 */										
+        $('#status').html('Request done '+String(json_data.length));
 											$("body").css("cursor", "default");
 						};
 						

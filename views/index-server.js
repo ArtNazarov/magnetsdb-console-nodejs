@@ -246,7 +246,7 @@ var userHistory = function()
 	return new ho();
 };
 
-
+/*
 var WebTor  = function(m)
 {
 	
@@ -284,5 +284,6 @@ var WebTor  = function(m)
 };
 
 window.WT = WebTor;
+*/
 window.MD5 = MD5;
 window.userHistory = userHistory;
