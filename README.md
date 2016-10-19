@@ -17,13 +17,36 @@ npm install url
 npm install browserify
 ```
 
-run browserify
+run browserify in views directory
 
 browserify tabulator.js index-server.js  > packed.js
 
 run in console mode (command line tool)
 
+return back to installed app and run
+
+```
+touch cache.json
+```
+
+open nano and input
+```
+{
+}
+```
+Press Ctrl+O to save file
+
 ```node index.js```
+
+Launch server using
+
+```
+node ajax-server.js
+```
+
+Open 127.0.0.1:44444 at your browser and enjoy.
+To access from other devices open port 44444 using gufw (LAN) or
+other firewall utility and open same port on your router (WAN)
 
 Using index.js
 ==============
